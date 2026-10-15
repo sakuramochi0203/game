@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10182c"><title>ほしぞらクリッカー v3</title>
+<style>
+/* 配色を変えたいときは、この変数を編集してください。 */
+:root{--bg:#0b1223;--card:#17233b;--line:#324464;--text:#eff5ff;--muted:#a7b9d7;--mint:#91ebcb;--gold:#ffe39a;font-family:system-ui,-apple-system,"Hiragino Sans",Meiryo,sans-serif;color:var(--text);background:var(--bg);color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0,#253655,transparent 60%),var(--bg);min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:4px}button:disabled{cursor:not-allowed;opacity:.45}button:not(:disabled):hover{filter:brightness(1.12)}
+main{max-width:1140px;margin:auto;padding:24px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 24px}.eyebrow{font-size:10px;font-weight:800;letter-spacing:3px;color:var(--mint)}h1{font-size:clamp(22px,4vw,32px);margin:7px 0}header p{color:var(--muted);font-size:12px;margin:0}.version{font-size:12px;border:1px solid var(--line);padding:8px 12px;color:var(--mint);white-space:nowrap;border-radius:6px}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}.card{background:linear-gradient(135deg,#1a2944,#142038);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 10px 24px #0002}h2{font-size:17px;margin:0}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.tag{color:var(--mint);font-size:11px;border:1px solid #3c736c;padding:4px 8px;border-radius:5px}.muted,.note{color:var(--muted);font-size:12px;line-height:1.8}.note{margin:10px 0}.score-label{font-size:11px;color:var(--muted);letter-spacing:2px}.score{font-size:clamp(30px,5vw,44px);font-weight:800;color:var(--gold);line-height:1.2;margin:7px 0;overflow-wrap:anywhere}.stats{display:flex;gap:20px;color:var(--muted);font-size:12px}.stats b{color:var(--text)}
+.scene-wrap{position:relative;margin:18px -8px 12px}.scene-button{border:1px solid #405474;border-radius:12px;background:#080f22;display:block;width:100%;padding:0;overflow:hidden;position:relative;line-height:0}.scene-button:active{transform:translateY(2px)}#scene{width:100%;height:auto;display:block;image-rendering:pixelated;aspect-ratio:4/3}.scene-hint{position:absolute;bottom:13px;left:0;right:0;color:#d6e6ff;text-align:center;font-size:11px;pointer-events:none}.scene-banner{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#0b1729df;border:1px solid #78d8b1;border-radius:6px;padding:8px 14px;font-size:12px;color:var(--mint);white-space:nowrap;pointer-events:none;opacity:0}.scene-banner.show{animation:reveal 2.6s both}@keyframes reveal{0%{opacity:0;top:25px}15%,85%{opacity:1;top:14px}100%{opacity:0}}
+#toast{min-height:36px;color:var(--mint);font-size:12px;line-height:1.7;margin-top:8px}.stage{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);gap:8px}.stage strong{color:var(--mint)}.track{display:flex;gap:5px;margin-top:10px}.track i{height:4px;background:#30415e;flex:1}.track i.active{background:var(--mint)}
+.item{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.item:first-child{border-top:0;padding-top:0}.info{flex:1;min-width:0}.info strong{display:block;font-size:13px;margin-bottom:4px}.info small{display:block;font-size:11px;color:var(--muted);line-height:1.7}.sprite{width:52px;height:52px;image-rendering:pixelated;flex:none;background:#0f1a30;border:1px solid #304362;border-radius:7px}.btn{border:1px solid #4d736f;background:#244e50;color:#d9fff0;padding:10px 12px;border-radius:7px;font-weight:700;font-size:12px;line-height:1.5;white-space:nowrap}.btn.secondary{background:#24334f;border-color:#526482;color:#d6e4fc}.btn.danger{color:#ffc8c8;background:#3d2534;border-color:#80516a}.price{display:block;font-size:11px;color:var(--gold)}.level{color:var(--mint);font-size:11px;margin-left:7px}.controls{display:flex;gap:8px;flex-wrap:wrap}.progress{height:5px;background:#0b1428;margin-top:8px;border-radius:4px;overflow:hidden}.progress div{height:100%;background:var(--mint)}.achievement{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:7px;color:var(--muted);font-size:12px;background:#10203a}.achievement.unlocked{color:#d6ffed;border-color:#3e7869;background:#193b3e}.achievement-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.achievement span{font-size:17px;color:var(--gold)}summary{cursor:pointer;font-size:13px;color:var(--mint)}details p,details li{font-size:12px;color:var(--muted);line-height:1.9}details ul{padding-left:20px}footer{color:var(--muted);font-size:11px;text-align:center;padding:8px 0 25px}#runtime{background:#453c29;color:#ffe4b6;padding:12px;border-radius:8px;font-size:12px;line-height:1.8;margin-bottom:18px}.hidden{display:none!important}
+dialog{width:min(92vw,540px);border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);padding:22px}dialog::backdrop{background:#050c1edc}dialog h2{margin-bottom:10px}textarea{width:100%;min-height:140px;background:#0d162b;color:var(--text);border:1px solid var(--line);border-radius:6px;padding:12px;resize:vertical;font-size:12px}.dialog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}#importFile{width:100%;font-size:12px;margin:12px 0}.file-label{display:block;font-size:12px;color:var(--muted)}
+@media(max-width:780px){main{padding:16px}.layout{grid-template-columns:1fr;gap:0}header{margin-bottom:18px}.card{padding:16px}.stats{gap:14px}.scene-wrap{margin:14px -4px 12px}}@media(max-width:360px){.sprite{width:40px;height:40px}.item{gap:8px}.btn{padding:8px}.achievement-grid{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.scene-banner.show{opacity:1}}
+</style>
+</head>
+<body><main>
+<header><div><div class="eyebrow">A LITTLE PLANET, A BIG DREAM</div><h1>ほしぞらクリッカー</h1><p>ひと粒の星から、あなたの宇宙を育てよう。</p></div><span class="version">v3 · PIXEL</span></header>
+<div id="runtime" role="status">起動待ちです。星が反応しない場合は、ChatGPT内のファイルプレビューではなく、公開したページをSafariやChromeで開いてください。</div>
+<noscript><p>このゲームを遊ぶには、JavaScriptが実行できるブラウザで開いてください。</p></noscript>
+<div class="layout"><div>
+<section class="card"><div class="score-label">YOUR STARS / 所持している星</div><div class="score"><span id="stars">0</span><span style="font-size:19px"> ✦</span></div><div class="stats"><span>タップ <b id="tapPower">+1</b></span><span>自動生産 <b id="sps">0</b> / 秒</span></div>
+<div class="scene-wrap"><button class="scene-button" id="star" aria-label="惑星をタップして星を集める"><canvas id="scene" width="320" height="240" aria-hidden="true"></canvas></button><div class="scene-hint">TAP TO COLLECT · 惑星をタップ</div><div class="scene-banner" id="unlock" aria-hidden="true"></div></div>
+<div class="stage"><strong id="stageName">小さな星</strong><span id="sceneLevel">施設 0 個</span></div><div class="track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><div id="toast" role="status" aria-live="polite"></div><div class="muted">累計獲得 <span id="total">0</span> ✦</div></section>
+<section class="card"><div class="section-head"><h2>基本アップグレード</h2><span class="tag">POWER UP</span></div><div id="upgrades"></div></section>
+<section class="card"><div class="section-head"><h2>セーブ・設定</h2><span id="saveStatus" class="muted">未保存</span></div><div class="controls"><button class="btn" id="save">今すぐ保存</button><button class="btn secondary" id="sound" aria-pressed="true">効果音 ON</button><button class="btn secondary" id="export">書き出す</button><button class="btn secondary" id="import">読み込む</button></div><p class="note">10秒ごとに自動保存。放置報酬は最大8時間。セーブの書き出しで端末や公開URLを変更できます。</p>
+<details><summary>遊び方・セーブの引き継ぎ・編集方法</summary><ul><li>惑星をタップして星を集め、施設を購入してください。施設は自動で星を生産します。</li><li>施設レベル1で建物が出現。Lv.3で増築、Lv.5で大型化、Lv.10で最終外観になります。各レベルで生産量も増えます。</li><li>ミッションの「受け取る」を押すと報酬がもらえます。実績は自動で記録されます。</li><li>v2と同じ端末・同じブラウザ・同じ公開元で開くと旧データを自動移行します。旧v2のデータは消しません。旧版に戻ってもv3の進行は反映されません。</li><li>ローカルHTMLの保存場所を変えた場合や、SafariとChatGPTのプレビュー間では自動移行できない場合があります。読み込みにはv2/v3のセーブJSONも使用できます。</li><li>v2のセーブにタップ回数はないため、v3のタップ回数は0から記録します。星・累計・レベル・施設・報酬受取状態・音設定は引き継ぎます。</li><li>外部画像・音声・ライブラリ不要。HTML内の「施設の設定」の価格・生産量やCSS先頭の配色を変更できます。</li></ul><button class="btn danger" id="reset">v3のデータを初期化</button></details></section>
+</div><div>
+<section class="card"><div class="section-head"><h2>惑星の施設</h2><span class="tag">BUILD & GROW</span></div><p class="note" style="margin-top:0">施設を購入して、惑星の風景を変えよう。</p><div id="buildings"></div></section>
+<section class="card"><div class="section-head"><h2>ミッション</h2><span class="tag" id="missionCount">0 / 6</span></div><div id="missions"></div></section>
+<section class="card"><div class="section-head"><h2>実績</h2><span class="tag" id="achievementCount">0 / 8</span></div><div id="achievements" class="achievement-grid"></div></section>
+</div></div><footer>ドット絵はゲーム内で描画 · 効果音は合成音 · 広告なし · データはブラウザ内に保存</footer>
+<dialog id="backupDialog"><div class="dialog-head"><h2 id="dialogTitle">セーブデータ</h2><button class="btn secondary" id="closeDialog">閉じる</button></div><p class="note" id="dialogNote"></p><label for="backupText" class="file-label">セーブJSON</label><textarea id="backupText" spellcheck="false"></textarea><label class="file-label" id="fileLabel">またはJSONファイルを選択<input type="file" id="importFile" accept=".json,application/json"></label><div class="controls"><button class="btn" id="downloadSave">JSONをダウンロード</button><button class="btn" id="applyImport">このデータを読み込む</button></div><p class="note" id="dialogMessage" role="status"></p></dialog>
+</main>
+<script>
+"use strict";
+// ===== 施設の設定：idはセーブ互換性のため変更しないでください =====
+const DEFS=[
+ {id:"farm",name:"星の農園",base:60,rate:2,scale:1.45,desc:"光る作物が育つ、星の畑"},
+ {id:"factory",name:"星工場",base:450,rate:12,scale:1.5,desc:"夜空に星を送り出す製造所"},
+ {id:"station",name:"宇宙ステーション",base:3000,rate:75,scale:1.55,desc:"惑星にそびえる宇宙観測基地"},
+ {id:"planet",name:"星の惑星",base:25000,rate:450,scale:1.6,desc:"小さな惑星を育てる星のドーム"}
+];
+// v2と同じミッションid・達成条件・報酬です。
+const MISSIONS=[
+ {id:"m1",name:"はじめの一歩",target:30,kind:"total",reward:20},
+ {id:"m2",name:"星集め名人",target:300,kind:"total",reward:100},
+ {id:"m3",name:"宇宙への挑戦",target:2000,kind:"total",reward:500},
+ {id:"m4",name:"施設オーナー",target:3,kind:"owned",reward:200},
+ {id:"m5",name:"宇宙の開拓者",target:12,kind:"owned",reward:1200},
+ {id:"m6",name:"星の大富豪",target:20000,kind:"total",reward:3000}
+];
+const ACHIEVEMENTS=[
+ {id:"a1",name:"初めての星",kind:"total",target:1},
+ {id:"a2",name:"100個の星",kind:"total",target:100},
+ {id:"a3",name:"1万個の星",kind:"total",target:10000},
+ {id:"a4",name:"初めての施設",kind:"owned",target:1},
+ {id:"a5",name:"施設10個建設",kind:"owned",target:10},
+ {id:"a6",name:"自動生産100/秒",kind:"sps",target:100},
+ {id:"a7",name:"100回タップ",kind:"clicks",target:100},
+ {id:"a8",name:"全施設を開放",kind:"types",target:4}
+];
+const KEY="hoshizora-clicker-v3", V2="hoshizora-clicker-v2", V1="hoshizora-clicker-v1", MAX=1e300;
+const $=id=>document.getElementById(id), ctx=$("scene").getContext("2d");
+const fresh=()=>({version:3,stars:0,total:0,tapLevel:0,autoLevel:0,buildings:{farm:0,factory:0,station:0,planet:0},claimed:[],achieved:[],clicks:0,sound:true,lastSaved:Date.now()});
+let s=fresh(), audio=null, saveBlocked=false, conflict=false, storageAvailable=true, particles=[], popUntil=0, lastTick=Date.now(), toastTimer, bannerTimer;
+const fmt=n=>Math.floor(n).toLocaleString("ja-JP",{maximumFractionDigits:0,notation:n>=1e12?"compact":"standard"});
+const owned=()=>DEFS.reduce((n,d)=>n+s.buildings[d.id],0), types=()=>DEFS.filter(d=>s.buildings[d.id]>0).length;
+const sps=()=>s.autoLevel+DEFS.reduce((n,d)=>n+s.buildings[d.id]*d.rate,0);
+const tapCost=()=>Math.floor(10*1.4**s.tapLevel), robotCost=()=>Math.floor(25*1.5**s.autoLevel);
+const cost=d=>Math.floor(d.base*d.scale**s.buildings[d.id]);
+const progress=m=>m.kind==="total"?s.total:m.kind==="owned"?owned():m.kind==="sps"?sps():m.kind==="types"?types():s.clicks;
+const tier=n=>n>=10?4:n>=5?3:n>=3?2:1;
+function notify(msg){$("toast").textContent=msg;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").textContent="",7000)}
+function earn(n){if(Number.isFinite(n)&&n>0){s.stars=Math.min(MAX,s.stars+n);s.total=Math.min(MAX,s.total+n)}}
+// 不正なファイルを読み込んで、現在の進行を失わないよう検査します。
+function normalize(x){
+ if(!x||typeof x!=="object"||Array.isArray(x))throw Error("セーブJSONの形式が違います。");
+ const valid=n=>typeof n==="number"&&Number.isFinite(n)&&n>=0&&n<=MAX;
+ for(const k of ["stars","tapLevel","autoLevel"])if(!valid(x[k]))throw Error(k+" が正しい数値ではありません。");
+ for(const k of ["tapLevel","autoLevel"])if(!Number.isInteger(x[k])||x[k]>1000)throw Error("レベルの範囲が違います。");
+ if(x.version!==undefined&&x.version!==3&&x.version!==2&&x.version!==1)throw Error("このセーブのバージョンには対応していません。");
+ const v=fresh();v.stars=x.stars;v.total=x.total===undefined?x.stars:x.total;
+ if(!valid(v.total))throw Error("累計の数値が違います。");v.total=Math.max(v.stars,v.total);
+ v.tapLevel=x.tapLevel;v.autoLevel=x.autoLevel;
+ if(x.buildings!==undefined){if(!x.buildings||typeof x.buildings!=="object"||Array.isArray(x.buildings))throw Error("施設データの形式が違います。");
+ for(const d of DEFS){const n=x.buildings[d.id]??0;if(!valid(n)||!Number.isInteger(n)||n>1000)throw Error("施設レベルが違います。");v.buildings[d.id]=n}}
+ for(const [k,list] of [["claimed",MISSIONS],["achieved",ACHIEVEMENTS]]){if(x[k]!==undefined&&!Array.isArray(x[k]))throw Error("実績・報酬データの形式が違います。");v[k]=[...new Set((x[k]??[]).filter(id=>list.some(m=>m.id===id)))];}
+ v.clicks=x.clicks===undefined?0:x.clicks;if(!valid(v.clicks)||!Number.isInteger(v.clicks))throw Error("タップ回数が違います。");
+ v.sound=x.sound!==false;v.lastSaved=valid(x.lastSaved)&&x.lastSaved<=Date.now()?x.lastSaved:Date.now();return v;
+}
+function save(show=false){
+ if(conflict){notify("別タブで保存されました。このページを再読み込みしてください。");return false}
+ if(saveBlocked){notify("元のセーブを保護しています。読み込みで復元するか初期化してください。");return false}
+ const data={...s,lastSaved:Date.now()};
+ try{localStorage.setItem(KEY,JSON.stringify(data));s.lastSaved=data.lastSaved;storageAvailable=true;$("saveStatus").textContent="保存 "+new Date().toLocaleTimeString("ja-JP",{hour:"2-digit",minute:"2-digit"});if(show)notify("保存しました。");return true}
+ catch(e){storageAvailable=false;$("saveStatus").textContent="保存不可";notify("自動保存できません。『書き出す』からJSONを保存してください。");return false}
+}
+function load(){
+ try{for(const key of [KEY,V2,V1]){const raw=localStorage.getItem(key);if(raw===null)continue;
+ try{s=normalize(JSON.parse(raw));const sec=Math.min(28800,Math.max(0,(Date.now()-s.lastSaved)/1000));const bonus=sec*sps();earn(bonus);
+ return (key!==KEY?"旧セーブをv3に引き継ぎました。 ":"")+(bonus>=1?"放置報酬 +"+fmt(bonus)+" ✦":"");}
+ catch(e){saveBlocked=true;$("saveStatus").textContent="セーブ保護中";return "セーブを読み込めません。元データは上書きしません。読み込みで復元できます。"}}
+ }catch(e){storageAvailable=false;return "ブラウザの保存機能が使えません。セーブを書き出して保管してください。"}return "ようこそ。惑星をタップして、最初の農園を建てよう。";
+}
+function advance(){const now=Date.now(),sec=Math.min(28800,Math.max(0,(now-lastTick)/1000));lastTick=now;if(!conflict)earn(sec*sps())}
+function sound(kind="tap"){
+ if(!s.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;audio??=new A();if(audio.state==="suspended")audio.resume().catch(()=>{});
+ const freqs=kind==="unlock"?[523,659,784,1047]:kind==="reward"?[660,880,1100]:kind==="buy"?[660,880]:[440];
+ freqs.forEach((f,i)=>{const t=audio.currentTime+i*.085,o=audio.createOscillator(),g=audio.createGain();o.type="triangle";o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.035,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+.13);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+.15)});
+ }catch(e){/* 音が使えない環境でもゲームを続けます。 */}}
+function reveal(text){const el=$("unlock");el.textContent=text;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");clearTimeout(bannerTimer);bannerTimer=setTimeout(()=>el.classList.remove("show"),2700);burst(160,90,22)}
+function unlockAchievements(silent=false){const newOnes=[];for(const a of ACHIEVEMENTS)if(!s.achieved.includes(a.id)&&progress(a)>=a.target){s.achieved.push(a.id);newOnes.push(a.name)}if(newOnes.length&&!silent)notify("実績達成："+newOnes.join("、"));return newOnes.length>0}
+function buy(kind,id){if(conflict)return;advance();let c,first=false,growth=false,name="";
+ if(kind==="tap"){c=tapCost();if(!Number.isFinite(c)||s.stars<c)return;s.stars-=c;s.tapLevel++;name="星の手袋"}
+ else if(kind==="auto"){c=robotCost();if(!Number.isFinite(c)||s.stars<c)return;s.stars-=c;s.autoLevel++;name="星ロボット"}
+ else{const d=DEFS.find(d=>d.id===id);if(!d)return;c=cost(d);if(!Number.isFinite(c)||s.stars<c||s.buildings[id]>=1000)return;first=s.buildings[id]===0;const before=tier(s.buildings[id]);s.stars-=c;s.buildings[id]++;growth=tier(s.buildings[id])!==before;name=d.name;}
+ notify(name+"を育成しました。");unlockAchievements();if(first||growth)reveal((first?"新施設開放！ ":"増築完了！ ")+name);else if(kind==="building")burst(160,100,12);sound(first||growth?"unlock":"buy");render();save();draw(performance.now());
+}
+// ===== UI：ボタンを作り直さず数値だけ更新（連続タップにも対応） =====
+const rows={},missionRows={},achievementRows={};
+function makeRow(parent,id,title,desc,callback,icon){const el=document.createElement("div");el.className="item";let sprite;
+ if(icon){sprite=document.createElement("canvas");sprite.width=48;sprite.height=48;sprite.className="sprite";sprite.setAttribute("aria-hidden","true");el.append(sprite)}
+ const info=document.createElement("div");info.className="info";const strong=document.createElement("strong"),level=document.createElement("span");strong.textContent=title;level.className="level";strong.append(level);const sub=document.createElement("small");sub.textContent=desc;info.append(strong,sub);
+ const b=document.createElement("button");b.className="btn";b.id="buy-"+id;const label=document.createElement("span"),price=document.createElement("span");price.className="price";b.append(label,price);b.addEventListener("click",callback);el.append(info,b);parent.append(el);return {el,level,sub,b,label,price,sprite};}
+function setup(){rows.tap=makeRow($("upgrades"),"tap","星の手袋","タップで集める星 +1",()=>buy("tap"));rows.auto=makeRow($("upgrades"),"auto","星ロボット","毎秒集める星 +1",()=>buy("auto"));
+ for(const d of DEFS)rows[d.id]=makeRow($("buildings"),d.id,d.name,d.desc,()=>buy("building",d.id),true);
+ for(const m of MISSIONS){const row=makeRow($("missions"),m.id,m.name,"",()=>{if(conflict||s.claimed.includes(m.id)||progress(m)<m.target)return;advance();s.claimed.push(m.id);earn(m.reward);notify("ミッション達成！ +"+fmt(m.reward)+" ✦");unlockAchievements();sound("reward");burst(160,100,20);render();save()});const bar=document.createElement("div");bar.className="progress";const fill=document.createElement("div");bar.append(fill);row.el.querySelector(".info").append(bar);row.fill=fill;missionRows[m.id]=row;}
+ for(const a of ACHIEVEMENTS){const el=document.createElement("div");el.className="achievement";const icon=document.createElement("span"),text=document.createElement("div");text.textContent=a.name;el.append(icon,text);$("achievements").append(el);achievementRows[a.id]={el,icon};}}
+function render(){
+ $("stars").textContent=fmt(s.stars);$("total").textContent=fmt(s.total);$("tapPower").textContent="+"+fmt(1+s.tapLevel);$("sps").textContent=fmt(sps());$("sound").textContent=s.sound?"効果音 ON":"効果音 OFF";$("sound").setAttribute("aria-pressed",String(s.sound));
+ for(const [id,n,c] of [["tap",s.tapLevel,tapCost()],["auto",s.autoLevel,robotCost()]]){const r=rows[id];r.level.textContent="Lv."+n;r.label.textContent="育成";r.price.textContent=Number.isFinite(c)?fmt(c)+" ✦":"上限";r.b.disabled=conflict||!Number.isFinite(c)||s.stars<c||n>=1000;}
+ for(const d of DEFS){const r=rows[d.id],n=s.buildings[d.id],c=cost(d);r.level.textContent="Lv."+n;r.sub.textContent=d.desc+" ／ +"+d.rate+"/秒（現在 "+fmt(n*d.rate)+"/秒）";r.label.textContent=n?"追加建設・育成":"開放する";r.price.textContent=Number.isFinite(c)&&n<1000?fmt(c)+" ✦":"上限";r.b.disabled=conflict||!Number.isFinite(c)||s.stars<c||n>=1000;if(r.lastN!==n){const gc=r.sprite.getContext("2d");gc.clearRect(0,0,48,48);drawBuilding(gc,d.id,24,40,n?tier(n):1,0);r.sprite.style.opacity=n?"1":".55";r.lastN=n;}}
+ for(const m of MISSIONS){const r=missionRows[m.id],p=progress(m),done=s.claimed.includes(m.id);r.sub.textContent=(m.kind==="total"?"累計 ":"施設 ")+fmt(Math.min(p,m.target))+" / "+fmt(m.target)+" · 報酬 "+fmt(m.reward)+" ✦";r.fill.style.width=Math.min(100,p/m.target*100)+"%";r.label.textContent=done?"受取済":p>=m.target?"受け取る":"挑戦中";r.b.disabled=conflict||done||p<m.target;}
+ for(const a of ACHIEVEMENTS){const yes=s.achieved.includes(a.id),r=achievementRows[a.id];r.el.classList.toggle("unlocked",yes);r.icon.textContent=yes?"✦":"◇";r.el.setAttribute("aria-label",a.name+"："+(yes?"達成":"未達成"));}
+ $("missionCount").textContent=s.claimed.length+" / "+MISSIONS.length;$("achievementCount").textContent=s.achieved.length+" / "+ACHIEVEMENTS.length;
+ $("stageName").textContent=["小さな星","芽吹く惑星","星づくりの街","宇宙の観測拠点","星の楽園"][types()];$("sceneLevel").textContent="施設 "+owned()+" 個";document.querySelectorAll(".track i").forEach((el,i)=>el.classList.toggle("active",i<=types()));}
+// ===== ドット絵：320×240で描き、拡大して表示。外部画像は不要です。 =====
+function rect(g,x,y,w,h,c){g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),w,h)}
+function starShape(g,x,y,c,size=1){rect(g,x,y-2*size,size,5*size,c);rect(g,x-2*size,y,5*size,size,c)}
+function drawBuilding(g,id,x,y,t,time){
+ const big=t>=3, w=big?29:21; // xは中心、yは地面
+ rect(g,x-w/2-3,y, w+6,3,"#294758");
+ if(id==="farm"){
+ rect(g,x-w/2,y-5,w,5,"#785145");rect(g,x-w/2,y-5,w,1,"#bd815a");
+ for(let i=0;i<(big?5:3);i++){const px=x-w/2+3+i*5,h=7+(i%2)*3+(t===4?3:0);rect(g,px,y-5-h,2,h,"#67a76f");rect(g,px-2,y-8,3,2,"#8bd995");starShape(g,px,y-5-h,"#ffe99b",1)}
+ if(t>=2){rect(g,x+13,y-16,12,13,"#537e74");rect(g,x+15,y-18,8,2,"#8ab9a1");rect(g,x+15,y-14,3,8,"#aae9c4");rect(g,x+20,y-14,3,8,"#79c6b5")}
+ if(t===4){rect(g,x-18,y-20,3,20,"#718287");rect(g,x-23,y-21,13,3,"#a6dcd0");starShape(g,x-17,y-24,"#ffe091")}
+ }else if(id==="factory"){
+ rect(g,x-w/2,y-19,w,19,"#657d98");rect(g,x-w/2,y-19,w,3,"#b0c5d4");rect(g,x-w/2+2,y-16,w-4,2,"#425674");rect(g,x-3,y-9,6,9,"#263b56");
+ rect(g,x-w/2+3,y-12,4,4,"#ffe69c");rect(g,x+w/2-7,y-12,4,4,"#ffe69c");rect(g,x+4,y-30,5,12,"#51677f");rect(g,x+3,y-30,7,3,"#a9b4be");
+ if(time){const off=Math.floor(time/250)%5;rect(g,x+4-off,y-35-off*2,5,3,"#b0cfdb66");rect(g,x+7,y-41-off,4,3,"#b0cfdb44")}
+ if(t>=2){rect(g,x-19,y-11,8,11,"#55728c");rect(g,x-18,y-9,5,3,"#efc482")}
+ if(big){rect(g,x-8,y-26,14,7,"#7994ad");rect(g,x-6,y-24,3,3,"#9af1de");rect(g,x,y-24,3,3,"#9af1de")}
+ if(t===4){rect(g,x-14,y-30,4,10,"#ac91ce");starShape(g,x-12,y-32,"#ffdd9f")}
+ }else if(id==="station"){
+ const h=big?39:30;rect(g,x-5,y-h,10,h,"#94a9c8");rect(g,x-3,y-h+2,2,h-2,"#d2e3e7");rect(g,x-7,y-13,14,13,"#526e9a");rect(g,x-2,y-9,4,7,"#a7f2e3");
+ rect(g,x-2,y-h-11,3,11,"#b1bfcd");rect(g,x-12,y-h-7,14,3,"#749ec1");rect(g,x-14,y-h-10,6,3,"#a2cce1");rect(g,x-12,y-h-7,5,6,"#5d819c");
+ rect(g,x+8,y-23,13,8,"#446fac");rect(g,x+7,y-23,15,1,"#89c6da");rect(g,x+12,y-22,1,6,"#83b4d4");rect(g,x+17,y-22,1,6,"#83b4d4");rect(g,x+9,y-15,2,15,"#55788b");
+ if(t>=2){rect(g,x-19,y-10,10,10,"#6f92b9");rect(g,x-17,y-8,5,4,"#bcf1db")}
+ if(t===4){rect(g,x-7,y-h-2,14,3,"#c3a2ed");starShape(g,x,y-h-15,Math.floor(time/450)%2?"#f6c5ee":"#fff3bb")}
+ }else{
+ rect(g,x-16,y-20,32,20,"#43618c");rect(g,x-13,y-26,26,6,"#719dba");rect(g,x-9,y-29,18,3,"#a9d8d6");rect(g,x-13,y-23,26,19,"#72b6c0");rect(g,x-10,y-25,6,18,"#bce6df");rect(g,x-18,y-4,36,4,"#8ba5c1");
+ rect(g,x+1,y-20,9,9,"#4875ab");rect(g,x+2,y-19,6,3,"#90d792");rect(g,x+5,y-15,4,3,"#a0cc83");starShape(g,x+7,y-12,"#ffeab2");
+ if(t>=2){rect(g,x-21,y-16,4,16,"#6d719c");starShape(g,x-20,y-18,"#cfb4ff")}
+ if(big){rect(g,x+16,y-16,6,16,"#7c7daf");rect(g,x+15,y-17,8,2,"#c4afee");rect(g,x+18,y-13,2,8,"#d4e9ff")}
+ if(t===4){rect(g,x-8,y-34,16,4,"#a3a5d5");rect(g,x-2,y-40,4,6,"#a4d9d5");starShape(g,x,y-43,"#fff0a8")}
+ }
+}
+// 同じ種の乱数を使うので、読み込み直しても地形は変わりません。
+let seed=7142;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+const sky=Array.from({length:70},()=>({x:Math.floor(rnd()*320),y:Math.floor(rnd()*225),size:rnd()>.87?2:1,phase:rnd()*6}));
+const ground=[];for(let y=80;y<=213;y+=3)for(let x=60;x<=260;x+=3){const nx=(x-160)/96,ny=(y-148)/66;if(nx*nx+ny*ny<=1){const r=rnd();ground.push({x,y,c:r<.12?"#659783":r<.35?"#527d79":r<.7?"#3f6b72":"#365667"})}}
+let reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function burst(x,y,n){if(reduced)return;for(let i=0;i<n;i++){const a=i/n*Math.PI*2;particles.push({x,y,vx:Math.cos(a)*(12+Math.random()*22),vy:Math.sin(a)*22-15,born:performance.now(),text:null,c:i%2?"#a6eed1":"#ffe3a3"})}particles=particles.slice(-100)}
+function tapEffect(e,amount){const r=$("scene").getBoundingClientRect();const keyboard=e.detail===0;const x=keyboard?160:Math.max(10,Math.min(300,(e.clientX-r.left)/r.width*320)),y=keyboard?120:Math.max(30,Math.min(205,(e.clientY-r.top)/r.height*240));burst(x,y,10);particles.push({x,y,vx:0,vy:-36,born:performance.now(),text:"+"+fmt(amount),c:"#fff0b1"});popUntil=performance.now()+180;}
+function draw(time){
+ ctx.clearRect(0,0,320,240);rect(ctx,0,0,320,240,"#0b142b");rect(ctx,0,0,320,70,"#101b34");rect(ctx,0,70,320,45,"#0d1931");
+ for(const p of sky){const bright=reduced||Math.sin(time/900+p.phase)>.1;rect(ctx,p.x,p.y,p.size,p.size,bright?"#99b8d2":"#47627d");if(p.size===2)rect(ctx,p.x-1,p.y+1,4,1,"#9bc9d4")}
+ rect(ctx,268,25,15,9,"#c2c2d7");rect(ctx,272,21,10,17,"#d5d7e1");rect(ctx,279,20,7,18,"#101b34");
+ // 惑星の階段状の輪郭と影
+ ctx.save();if(!reduced&&time<popUntil){ctx.translate(160,150);ctx.scale(1.025,1.025);ctx.translate(-160,-150)}
+ for(let y=79;y<=216;y+=3){const h=(y-148)/69;if(Math.abs(h)>1)continue;const w=Math.floor(Math.sqrt(1-h*h)*99/3)*3;rect(ctx,160-w,y,w*2,3,"#203d60")}
+ for(const p of ground)rect(ctx,p.x,p.y,3,3,p.c);
+ // 湖、山、草地、光る鉱石
+ for(const [x,y,w,h] of [[108,151,48,6],[100,157,64,9],[103,166,55,9],[112,175,36,5]])rect(ctx,x,y,w,h,"#31578b");rect(ctx,105,157,33,2,"#6496b2");rect(ctx,119,170,28,2,"#5487a8");
+ rect(ctx,166,93,12,6,"#8ca6a0");rect(ctx,160,99,25,6,"#7a928f");rect(ctx,153,105,39,8,"#5d7b7a");rect(ctx,166,93,8,2,"#c9d6c2");
+ for(const [x,y] of [[89,132],[183,181],[226,154],[150,199],[201,115],[82,154]]){rect(ctx,x,y,3,5,"#476c61");rect(ctx,x-3,y-2,8,4,"#78a682");rect(ctx,x-1,y-4,4,3,"#93bb8c")}
+ for(const [x,y] of [[116,110],[230,137],[175,202],[93,177]])starShape(ctx,x,y,Math.floor(time/800)%2?"#c6dfab":"#e7e9ac");
+ if(types()){rect(ctx,124,135,94,3,"#7a9587");rect(ctx,159,134,3,49,"#748b81");rect(ctx,187,126,3,55,"#778b83")}
+ const positions={farm:[115,137],factory:[194,139],station:[214,177],planet:[152,184]};
+ // 前後順を固定し、建物が地面に建っているように見せます。
+ for(const d of DEFS){const n=s.buildings[d.id];if(!n)continue;const [x,y]=positions[d.id];drawBuilding(ctx,d.id,x,y,tier(n),reduced?0:time);if(n>=3&&d.id==="farm")drawBuilding(ctx,"farm",84,152,1,0);if(n>=3&&d.id==="factory")drawBuilding(ctx,"factory",227,137,1,reduced?0:time);}
+ // 基本のロボットにも惑星上の姿を用意
+ if(s.autoLevel){const bob=reduced?0:Math.floor(time/450)%2;rect(ctx,178,160+bob,7,7,"#afc6d1");rect(ctx,179,158+bob,5,3,"#d4e6e9");rect(ctx,180,161+bob,1,1,"#253f5d");rect(ctx,183,161+bob,1,1,"#253f5d");rect(ctx,179,167+bob,2,2,"#6c92a0");rect(ctx,183,167+bob,2,2,"#6c92a0")}
+ ctx.restore();
+ for(const p of particles){const age=(time-p.born)/1000;if(age>1)continue;ctx.globalAlpha=Math.max(0,1-age);if(p.text){ctx.fillStyle=p.c;ctx.font="bold 11px monospace";ctx.textAlign="center";ctx.fillText(p.text,p.x,p.y+p.vy*age)}else rect(ctx,p.x+p.vx*age,p.y+p.vy*age+14*age*age,2,2,p.c)}ctx.globalAlpha=1;particles=particles.filter(p=>time-p.born<1000);
+}
+// ===== 操作・セーブの入出力 =====
+$("star").addEventListener("click",e=>{if(conflict)return;advance();const n=1+s.tapLevel;earn(n);s.clicks=Math.min(Number.MAX_SAFE_INTEGER,s.clicks+1);tapEffect(e,n);sound();const got=unlockAchievements();render();draw(performance.now());if(got)save()});
+$("save").addEventListener("click",()=>{advance();unlockAchievements();render();save(true)});
+$("sound").addEventListener("click",()=>{if(conflict)return;s.sound=!s.sound;render();save();if(s.sound)sound("buy")});
+function openBackup(mode){advance();render();const exp=mode==="export";$("dialogTitle").textContent=exp?"セーブを書き出す":"セーブを読み込む";$("dialogNote").textContent=exp?"JSONを保存するか、下の全文をコピーして保管してください。":"v2・v3のセーブJSONを貼り付けるか、ファイルを選択してください。現在の進行と置き換わります。";$("backupText").value=exp?JSON.stringify({...s,lastSaved:Date.now()},null,2):"";$("backupText").readOnly=exp;$("downloadSave").classList.toggle("hidden",!exp);$("applyImport").classList.toggle("hidden",exp);$("fileLabel").classList.toggle("hidden",exp);$("importFile").value="";$("dialogMessage").textContent="";$("backupDialog").showModal()}
+$("export").addEventListener("click",()=>openBackup("export"));$("import").addEventListener("click",()=>openBackup("import"));$("closeDialog").addEventListener("click",()=>$("backupDialog").close());
+$("downloadSave").addEventListener("click",()=>{const blob=new Blob([$("backupText").value],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="hoshizora-v3-save.json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);$("dialogMessage").textContent="保存画面が出ない場合は、JSON全文をコピーして保管してください。"});
+$("importFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;if(f.size>1000000){$("dialogMessage").textContent="ファイルが大きすぎます（最大1MB）。";return}try{$("backupText").value=await f.text();$("dialogMessage").textContent="ファイルを読み込みました。下のボタンで反映できます。"}catch(e){$("dialogMessage").textContent="ファイルを読み込めません。JSONを貼り付けてください。"}});
+$("applyImport").addEventListener("click",()=>{try{if(conflict)throw Error("別タブの保存と競合しています。ページを再読み込みしてください。");const next=normalize(JSON.parse($("backupText").value));if(!confirm("現在のv3の進行を読み込んだデータに置き換えますか？必要なら先に書き出してください。"))return;s=next;saveBlocked=false;lastTick=Date.now();unlockAchievements(true);save();render();draw(performance.now());$("backupDialog").close();notify("セーブを読み込みました。施設の外観も復元しました。")}catch(e){$("dialogMessage").textContent="読み込み失敗："+e.message}});
+$("reset").addEventListener("click",()=>{if(conflict)return;if(confirm("v3の星・施設・ミッションをすべて初期化しますか？旧v2の保存データは消しません。")){s=fresh();saveBlocked=false;lastTick=Date.now();particles=[];save();render();draw(performance.now());notify("v3を初期化しました。")}});
+window.addEventListener("storage",e=>{if(e.key===KEY){conflict=true;render();notify("別タブで保存が更新されました。このページを再読み込みしてください。")}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){advance();save()}else{advance();unlockAchievements();render();save();draw(performance.now())}});
+window.addEventListener("pagehide",()=>{advance();save()});
+try{const msg=load();setup();unlockAchievements(true);render();draw(performance.now());$("runtime").classList.add("hidden");if(!saveBlocked&&storageAvailable)save();notify(msg);
+ setInterval(()=>{if(document.hidden||conflict)return;advance();const got=unlockAchievements();render();if(got)save();if(reduced)draw(performance.now())},250);
+ setInterval(()=>{if(!document.hidden&&!conflict){advance();save()}},10000);
+ let previous=0;function animate(t){if(!document.hidden&&(!reduced||particles.length)&&t-previous>=66){draw(t);previous=t}requestAnimationFrame(animate)}requestAnimationFrame(animate);
+}catch(e){$("runtime").textContent="起動できませんでした："+e.message+"。公開したページをSafari・Chromeで開いてください。";console.error(e)}
+</script>
+</body></html>
